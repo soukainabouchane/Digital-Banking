@@ -1,8 +1,8 @@
 package org.sb.ebankingbackend.enums;
 
 public enum AccountStatus {
+    CREATED,
+    ACTIVATED,
+    SUSPENDED
 
-    CREATED, ACTIVATED, SUSPENDED
-
-    
 }

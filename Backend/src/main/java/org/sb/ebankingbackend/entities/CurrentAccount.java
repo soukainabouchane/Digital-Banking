@@ -1,8 +1,15 @@
-package org.sb.ebankingbackend.entities;
+    package org.sb.ebankingbackend.entities;
 
-public class CurrentAccount extends BankAccount{
+    import jakarta.persistence.Entity;
+    import lombok.AllArgsConstructor;
+    import lombok.Data;
+    import lombok.NoArgsConstructor;
 
-    private double overDraft;
-
-
-}
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Entity
+    //@DiscriminatorValue("CA")
+    public class CurrentAccount extends BankAccount{
+        private double overDraft;
+    }
