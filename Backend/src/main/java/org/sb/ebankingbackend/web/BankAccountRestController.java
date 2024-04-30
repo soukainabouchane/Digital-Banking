@@ -23,9 +23,10 @@ public class BankAccountRestController {
     private BankAccountMapper bankAccountMapper;
 
      @Autowired
-    public BankAccountRestController(BankAcountService bankAcountService, BankAccountMapper bankAccountMapper) {
+    public BankAccountRestController(BankAcountService bankAcountService,
+                                     BankAccountMapper bankAccountMapper) {
         this.bankAcountService = bankAcountService;
-       this.bankAccountMapper = bankAccountMapper;
+        this.bankAccountMapper = bankAccountMapper;
     }
 
     @GetMapping("/accounts")
