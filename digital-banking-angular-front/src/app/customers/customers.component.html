@@ -1,54 +1,77 @@
-<div class="container mt-2">
-  <ng-container *ngIf="customers | async as listCustomers; else failureOrLading">
-    <div class="card">
-      <div class="card-header">Customers</div>
-      <div class="card-body">
+
+
+<div class = "container mt-2">
+
+    <ng-container *ngIf="customers | async as listCustomers; else failureOrLoading">
+
+      <div class = "card" *ngIf = "customers">
+
+      <div>
+
+      </div>
+
+      <div class="card-header">
+        Customers
+      </div>
+
         <div *ngIf="searchFormGroup">
+<!--          {{ this.searchFormGroup.value | json }}-->
           <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchCustomers()">
+
             <div class="input-group">
-              <label class="input-group-text">Keyword :</label>
+
+              <label class="input-group-text">Keyword:</label>
               <input type="text" formControlName="keyword" class="form-control">
+
               <button class="btn btn-info">
-                <i class="bi bi-search"></i>
+                          <i class="bi bi-search"></i>
               </button>
+
             </div>
+
           </form>
         </div>
-        <table class="table">
-          <thead>
+
+      <table>
+        <thead>
           <tr>
-            <th>ID</th><th>Name</th><th>Email</th>
+            <th>Id</th><th>Name</th><th>Email</th>
           </tr>
-          </thead>
+        </thead>
           <tbody>
-          <tr *ngFor="let c of customers | async">
-            <td>{{c.id}}</td>
-            <td>{{c.name}}</td>
-            <td>{{c.email}}</td>
-            <td>
-              <button (click)="handleDeleteCustomer(c)" class="btn btn-danger">
-                <i class="bi bi-trash"></i>
-              </button>
-            </td>
-            <td>
-              <button (click)="handleCustomerAccounts(c)" class="btn btn-success">
-                Accounts
-              </button>
-            </td>
-          </tr>
+              <tr *ngFor = "let c of customers | async">
+                <td> {{ c.id }} </td>
+                <td> {{ c.name }} </td>
+                <td> {{ c.email }} </td>
+                <td>
+                  <button class = "btn btn-info" (click)="deleteCustomer(c)">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </td>
+                <td>
+                  <button (click)="handleCustomerAccounts(c)">Accounts</button>
+                </td>
+              </tr>
           </tbody>
-        </table>
-      </div>
+      </table>
+
     </div>
+
   </ng-container>
-  <ng-template #failureOrLading>
-    <ng-container *ngIf="errorMessage; else loading">
-      <div class="text-danger">
-        {{errorMessage}}
-      </div>
-    </ng-container>
-    <ng-template #loading>
-      Loading .....
-    </ng-template>
+
+  <ng-template #failureOrLoading>
+
+        <ng-container *ngIf="errorMessage"; else loading>
+            <div class="text-danger">
+              {{errorMessage}}
+            </div>
+        </ng-container>
+
+        <ng-template #loading>
+           Loading ...
+        </ng-template>
+
   </ng-template>
+
+
 </div>

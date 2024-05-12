@@ -1,16 +1,17 @@
 export interface AccountDetails {
-  accountId:            string;
-  balance:              number;
-  currentPage:          number;
-  totalPages:           number;
-  pageSize:             number;
-  accountOperationDTOS: AccountOperation[];
+  accountId:               string;
+  balance:                 number;
+  type:                    null;
+  currentPage:             number;
+  totalPages:              number;
+  pageSize:                number;
+  accountOperationDTOList: AccountOperationDTOList[];
 }
 
-export interface AccountOperation {
+export interface AccountOperationDTOList {
   id:            number;
   operationDate: Date;
   amount:        number;
-  type:          string;
   description:   string;
+  type:          string;
 }

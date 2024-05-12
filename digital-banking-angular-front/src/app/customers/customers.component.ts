@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {HttpClient} from "@angular/common/http";
 import {CustomerService} from "../services/customer.service";
 import {catchError, map, Observable, throwError} from "rxjs";
 import {Customer} from "../model/customer.model";
@@ -11,48 +10,85 @@ import {Router} from "@angular/router";
   templateUrl: './customers.component.html',
   styleUrls: ['./customers.component.css']
 })
+
 export class CustomersComponent implements OnInit {
-  customers! : Observable<Array<Customer>>;
-  errorMessage!: string;
-  searchFormGroup : FormGroup | undefined;
-  constructor(private customerService : CustomerService, private fb : FormBuilder, private router : Router) { }
+
+  customers!: Observable<Array<Customer>>;
+  errorMessage: string | undefined;
+  searchFormGroup!: FormGroup | undefined;
+
+  constructor(private customerService: CustomerService,
+              private fb: FormBuilder, private router: Router) {
+  }
 
   ngOnInit(): void {
-    this.searchFormGroup=this.fb.group({
-      keyword : this.fb.control("")
-    });
-    this.handleSearchCustomers();
-  }
-  handleSearchCustomers() {
-    let kw=this.searchFormGroup?.value.keyword;
-    this.customers=this.customerService.searchCustomers(kw).pipe(
+    // this.customerService.getCustomer().subscribe(
+    //   {
+    //     next : (data) => {
+    //       this.customers = data;
+    //     },
+    //     error : (err) => {
+    //       console.log(err);
+    //       this.errorMessage = err.error.message;
+    //     }
+    //   }
+    // )
+    this.searchFormGroup = this.fb.group(
+      {
+        keyword: this.fb.control("")
+      }
+    )
+
+    this.customers = this.customerService.getCustomer().pipe(
       catchError(err => {
-        this.errorMessage=err.message;
+        this.errorMessage = err.message;
         return throwError(err);
       })
     );
   }
 
-  handleDeleteCustomer(c: Customer) {
-    let conf = confirm("Are you sure?");
+
+  handleSearchCustomers() {
+    let kw = this.searchFormGroup?.value.keyword;
+    this.customers = this.customerService.searchCustomers(kw).pipe(
+      catchError(err => {
+        this.errorMessage = err.message;
+        return throwError(err);
+      })
+    )
+  }
+
+  /*deleteCustomer() {
+    this.customerService.deleteCustomer(this.customers)
+  }*/
+
+  deleteCustomer(c: Customer) {
+    let conf = confirm("Are you sure ?");
     if(!conf) return;
-    this.customerService.deleteCustomer(c.id).subscribe({
-      next : (resp) => {
-        this.customers=this.customers.pipe(
-          map(data=>{
-            let index=data.indexOf(c);
-            data.slice(index,1)
+    console.log(c.id);
+    this.customerService.deleteCustomer(c.id).subscribe(
+      (resp) => {
+        alert("Customer with Id " + c.id + " is deleted successfully");
+        // this.handleSearchCustomers();
+        this.customers = this.customers.pipe(
+          map( data => {
+            let index = data.indexOf(c);
+            data.slice(index, 1);
             return data;
           })
-        );
+        )
       },
-      error : err => {
-        console.log(err);
+      error => {
+        console.log(error);
       }
-    })
+    );
   }
 
   handleCustomerAccounts(customer: Customer) {
-    this.router.navigateByUrl("/customer-accounts/"+customer.id,{state :customer});
+    this.router.navigateByUrl("/customer-accounts/"+customer.id, {
+      state : customer
+    });
   }
+
+
 }
