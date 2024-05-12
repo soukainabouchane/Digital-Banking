@@ -1,6 +1,5 @@
 package org.sb.ebankingbackend.entities;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.List;
@@ -27,7 +26,7 @@ public class Customer {
 //    // @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
 //    private List<BankAccount> bankAccounts;
 
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
     //@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<BankAccount> bankAccounts;
 

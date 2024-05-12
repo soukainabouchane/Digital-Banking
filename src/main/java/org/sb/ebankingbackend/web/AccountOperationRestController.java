@@ -5,15 +5,14 @@ import org.sb.ebankingbackend.dtos.AccountHistoryDTO;
 import org.sb.ebankingbackend.dtos.AccountOperationDTO;
 import org.sb.ebankingbackend.exceptions.BankAccountNotFoundException;
 import org.sb.ebankingbackend.services.AccountOperationService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import javax.security.auth.login.AccountNotFoundException;
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin("*")
+
 public class AccountOperationRestController {
 
     private AccountOperationService accountOperationService;
@@ -34,6 +33,8 @@ public class AccountOperationRestController {
     ) throws AccountNotFoundException, BankAccountNotFoundException {
         return accountOperationService.getAccountHistory(accountId, page, size);
     }
+
+
 
 
 

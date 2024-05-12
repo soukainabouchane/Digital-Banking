@@ -32,15 +32,10 @@ public class BankAccountServiceImpl implements BankAcountService {
     private CustomerRepository customerRepository;
     private BankAccountRepository bankAccountRepository;
     private AccountOperationRepository accountOperationRepository;
-    private CustomerMapper dtoMapper;
+    private CustomerMapper customerMapper;
     private BankAccountMapper bankAccountMapper;
 
-    @Override
-    public Customer saveCustomer(Customer customer) {
-        log.info("Saving new Customer!");
-        Customer savedCustomer = customerRepository.save(customer);
-        return savedCustomer;
-    }
+
 
     @Override
     public CurrentBankAccountDTO
@@ -96,30 +91,6 @@ public class BankAccountServiceImpl implements BankAcountService {
     }
 
     @Override
-    public CustomerDTO getCustomer(Long id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(
-                ( ) -> new CustomerNotFoundException("Customer Not Found!")
-        );
-
-        CustomerDTO customerDTO = dtoMapper.fromCustomer(customer);
-        return customerDTO;
-    }
-
-    @Override
-    public List<CustomerDTO> listCustomers() {
-        List<Customer> customers = customerRepository.findAll();
-        List<CustomerDTO> customerDTOS = customers.stream().map(
-                customer -> dtoMapper.fromCustomer(customer)
-                ).collect(Collectors.toList());
-        /* List<CustomerDTO> customerDTOS = new ArrayList<>();
-        for(Customer customer : customers){
-            CustomerDTO customerDTO = dtoMapper.fromCustomer(customer);
-            customerDTOS.add(customerDTO);
-        } */
-        return customerDTOS;
-    }
-
-    @Override
     public BankAccountDTO getBankAccount(String accountId) throws BankAccountNotFoundException {
 
         BankAccount bankAccount =
@@ -138,31 +109,22 @@ public class BankAccountServiceImpl implements BankAcountService {
 
     }
 
-    @Override
-    public void debit() {
-
-    }
 
     @Override
     public void debit(String accountId, double amount, String description)
             throws BankAccountNotFoundException, BalanceNotSufficientException {
-
         BankAccount bankAccount = bankAccountRepository.findById(accountId).orElseThrow(
                 () -> new BankAccountNotFoundException("Bank account not found!")
         );
-
         AccountOperation accountOperation = new AccountOperation();
-
         accountOperation.setType(OperationType.CREDIT);
         accountOperation.setAmount(amount);
         accountOperation.setDescription(description);
         accountOperation.setOperationDate(new Date());
         accountOperation.setBankAccount(bankAccount);
         accountOperationRepository.save(accountOperation);
-
-        bankAccount.setBalance(bankAccount.getBalance() + amount);
+        bankAccount.setBalance(bankAccount.getBalance() - amount);
         bankAccountRepository.save(bankAccount);
-
     }
 
     @Override
@@ -183,8 +145,7 @@ public class BankAccountServiceImpl implements BankAcountService {
         accountOperation.setOperationDate(new Date());
         accountOperation.setBankAccount(bankAccount);
         accountOperationRepository.save(accountOperation);
-
-        bankAccount.setBalance(bankAccount.getBalance() - amount);
+        bankAccount.setBalance(bankAccount.getBalance() + amount);
         bankAccountRepository.save(bankAccount);
 
     }
@@ -193,7 +154,7 @@ public class BankAccountServiceImpl implements BankAcountService {
     @Override
     public void transfer(String accountIdSource, String accountIdDestination, double amount)
             throws BankAccountNotFoundException, BalanceNotSufficientException {
-        debit(accountIdSource, amount, "Transfer to" + accountIdDestination);
+        debit(accountIdSource, amount, "Transfer to " + accountIdDestination);
         credit(accountIdDestination, amount, "Transfer from "+accountIdSource);
     }
 
@@ -253,12 +214,7 @@ public class BankAccountServiceImpl implements BankAcountService {
         return savingAccount;
     }
 
-    @Override
-    public CustomerDTO createCustomer(CustomerDTO customerDTO) {
-        log.info("Saving new Customer");
-        Customer customer =  customerRepository.save(dtoMapper.fromCustomerDTO(customerDTO));
-        return dtoMapper.fromCustomer(customer);
-    }
+
 
     /* @Override
     public CustomerDTO updateCustomer(Long customerId, CustomerDTO customerDTO) {
@@ -273,37 +229,6 @@ public class BankAccountServiceImpl implements BankAcountService {
                 customerRepository.save(dtoMapper.fromCustomerDTO(customerDTO)));
 
     } */
-
-    @Override
-    public CustomerDTO updateCustomer(Long customerId, CustomerDTO customerDTO) {
-        log.info("Update customer");
-
-        // Retrieve the existing customer from the database
-        Customer customer = customerRepository.findById(customerId)
-                .orElseThrow(() -> new CustomerNotFoundException("Customer not found Exception"));
-
-        // Update the existing customer entity with values from customerDTO
-        // You can use setters or BeanUtils.copyProperties() as shown in the previous example
-        customer.setName(customerDTO.getName());
-        customer.setEmail(customerDTO.getEmail());
-        // Update other properties similarly...
-
-        // Save the updated customer entity back to the database
-        customer = customerRepository.save(customer);
-
-        // Convert the updated customer entity back to DTO and return
-        return dtoMapper.fromCustomer(customer);
-    }
-
-    @Override
-    public void deleteCustomer(Long id) {
-        Customer customer = customerRepository.findById(id).orElseThrow(
-                () -> new CustomerNotFoundException("Customer not found Exception"));
-        customerRepository.deleteById(id);
-    }
-
-
-
 
 
 }

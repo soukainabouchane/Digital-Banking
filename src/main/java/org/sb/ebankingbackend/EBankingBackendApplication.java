@@ -8,6 +8,7 @@ import org.sb.ebankingbackend.exceptions.BalanceNotSufficientException;
 import org.sb.ebankingbackend.exceptions.BankAccountNotFoundException;
 import org.sb.ebankingbackend.exceptions.CustomerNotFoundException;
 import org.sb.ebankingbackend.services.BankAcountService;
+import org.sb.ebankingbackend.services.impl.CustomerServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -24,7 +25,8 @@ public class EBankingBackendApplication {
 	}
 
 	@Bean
-	CommandLineRunner commandLineRunner(BankAcountService bankAccountService) {
+	CommandLineRunner commandLineRunner(BankAcountService bankAccountService,
+										CustomerServiceImpl customerService) {
 		return args -> {
 
 			Stream.of("Hassan", "Imane").forEach(
@@ -32,10 +34,10 @@ public class EBankingBackendApplication {
 						Customer customer = new Customer();
 						customer.setName(name);
 						customer.setEmail(name + "@gmail.com");
-						bankAccountService.saveCustomer(customer);
+						customerService.saveCustomer(customer);
 					}
 			);
-			bankAccountService.listCustomers().forEach(
+			customerService.listCustomers().forEach(
 					customer -> {
 						try {
 							bankAccountService.saveCurrentBankAccount(
