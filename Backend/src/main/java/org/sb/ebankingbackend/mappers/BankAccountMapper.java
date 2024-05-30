@@ -12,8 +12,6 @@ public class BankAccountMapper {
 
     private CustomerMapper customerMapper;
 
-
-
     public CurrentAccount toCurrentBankAccount(CurrentBankAccountDTO currentBankAccountDTO){
         CurrentAccount currentAccount = new CurrentAccount();
         BeanUtils.copyProperties(currentBankAccountDTO, currentAccount);

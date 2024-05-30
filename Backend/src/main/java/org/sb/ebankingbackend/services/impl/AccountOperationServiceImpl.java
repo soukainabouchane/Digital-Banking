@@ -72,7 +72,7 @@ public class AccountOperationServiceImpl implements AccountOperationService {
             throw new BankAccountNotFoundException("Account not Found Exception");
 
         Page<AccountOperation> accountOperations =
-                accountOperationRepository.findAccountOperationByBankAccount_Id(
+                accountOperationRepository.findByBankAccountIdOrderByOperationDateDesc(
                         accountId,
                         PageRequest.of(page, size));
 

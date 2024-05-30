@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.sb.ebankingbackend.enums.AccountStatus;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,5 +35,12 @@ public abstract class BankAccount {
     @OneToMany(mappedBy = "bankAccount", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<AccountOperation> accountOperations;
+
+    public void test(){
+        System.out.println("Hello test methode :)");
+
+
+
+    }
 
 }

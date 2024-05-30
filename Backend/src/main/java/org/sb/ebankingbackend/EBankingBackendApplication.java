@@ -8,10 +8,14 @@ import org.sb.ebankingbackend.exceptions.BalanceNotSufficientException;
 import org.sb.ebankingbackend.exceptions.BankAccountNotFoundException;
 import org.sb.ebankingbackend.exceptions.CustomerNotFoundException;
 import org.sb.ebankingbackend.services.BankAcountService;
+import org.sb.ebankingbackend.services.impl.CustomerServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+
+import java.security.SecureRandom;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -23,8 +27,21 @@ public class EBankingBackendApplication {
 		SpringApplication.run(EBankingBackendApplication.class, args);
 	}
 
+//	public static void main(String[] args) {
+//		// Generate a random byte array with a length of 32 bytes (256 bits)
+//		byte[] randomBytes = new byte[32]; // 256 bits
+//		new SecureRandom().nextBytes(randomBytes);
+//
+//		// Convert the byte array to a Base64-encoded string
+//		String secretKey = Base64.getEncoder().encodeToString(randomBytes);
+//
+//		// Print the generated secret key
+//		System.out.println("Generated Secret Key: " + secretKey);
+//	}
+
 	@Bean
-	CommandLineRunner commandLineRunner(BankAcountService bankAccountService) {
+	CommandLineRunner commandLineRunner(BankAcountService bankAccountService,
+										CustomerServiceImpl customerService) {
 		return args -> {
 
 			Stream.of("Hassan", "Imane").forEach(
@@ -32,10 +49,10 @@ public class EBankingBackendApplication {
 						Customer customer = new Customer();
 						customer.setName(name);
 						customer.setEmail(name + "@gmail.com");
-						bankAccountService.saveCustomer(customer);
+						customerService.saveCustomer(customer);
 					}
 			);
-			bankAccountService.listCustomers().forEach(
+			customerService.listCustomers().forEach(
 					customer -> {
 						try {
 							bankAccountService.saveCurrentBankAccount(
